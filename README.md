@@ -1,4 +1,4 @@
-<h1 align="center">create-agent-config</h1>
+<h1 align="center">npx create-agent-config</h1>
 
 <p align="center">
   <strong>Your AI coding agent starts every session blind. Fix that in 30 seconds.</strong>
