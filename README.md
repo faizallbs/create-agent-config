@@ -14,6 +14,8 @@
 
 ---
 
+![Demo](assets/demo.gif)
+
 ```bash
 npm create agent-config
 ```
