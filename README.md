@@ -67,27 +67,27 @@ No API keys. No LLM calls. Works offline. Instant.
 
 ## Supported Formats
 
-| Format | File | Tools |
-|---|---|---|
-| AGENTS.md | `AGENTS.md` | Codex, Devin, Jules, 40+ agents |
-| Claude Code | `CLAUDE.md` | Claude Code |
-| Cursor | `.cursor/rules/project.mdc` | Cursor IDE (modern format) |
-| GitHub Copilot | `.github/copilot-instructions.md` | GitHub Copilot |
-| Windsurf | `.windsurfrules` | Windsurf / Codeium |
-| Cline | `.clinerules` | Cline |
+| Format         | File                              | Tools                           |
+| -------------- | --------------------------------- | ------------------------------- |
+| AGENTS.md      | `AGENTS.md`                       | Codex, Devin, Jules, 40+ agents |
+| Claude Code    | `CLAUDE.md`                       | Claude Code                     |
+| Cursor         | `.cursor/rules/project.mdc`       | Cursor IDE (modern format)      |
+| GitHub Copilot | `.github/copilot-instructions.md` | GitHub Copilot                  |
+| Windsurf       | `.windsurfrules`                  | Windsurf / Codeium              |
+| Cline          | `.clinerules`                     | Cline                           |
 
 All formats get the same detected information - your stack, commands, conventions, project structure. Edit them after generation to add project-specific rules.
 
 ## What Gets Detected
 
-| Category | Examples |
-|---|---|
-| Languages | TypeScript, JavaScript, Python, Rust, Go |
-| Frameworks | Next.js, React, Vue, Nuxt, Angular, Svelte, NestJS, Express, Fastify, Hono, Django, FastAPI |
-| Test runners | Vitest, Jest, Mocha, Playwright, Cypress, pytest |
-| Build tools | tsup, esbuild, rollup, Vite, Webpack |
-| Package managers | npm, pnpm, yarn, bun |
-| Monorepo tools | Turborepo, Nx, Lerna, workspaces |
+| Category         | Examples                                                                                    |
+| ---------------- | ------------------------------------------------------------------------------------------- |
+| Languages        | TypeScript, JavaScript, Python, Rust, Go                                                    |
+| Frameworks       | Next.js, React, Vue, Nuxt, Angular, Svelte, NestJS, Express, Fastify, Hono, Django, FastAPI |
+| Test runners     | Vitest, Jest, Mocha, Playwright, Cypress, pytest                                            |
+| Build tools      | tsup, esbuild, rollup, Vite, Webpack                                                        |
+| Package managers | npm, pnpm, yarn, bun                                                                        |
+| Monorepo tools   | Turborepo, Nx, Lerna, workspaces                                                            |
 
 Detection is static analysis only. It reads config files and package.json - nothing gets executed, nothing gets uploaded.
 
@@ -135,13 +135,13 @@ If a config file already exists, it gets skipped. You won't lose anything.
 
 ## Tech Stack
 
-| | |
-|---|---|
-| **Language** | ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white) |
-| **Testing** | ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=white) |
-| **Bundler** | ![tsup](https://img.shields.io/badge/tsup-ESM%20%2B%20CJS-yellow) |
-| **CI** | ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=githubactions&logoColor=white) |
-| **Dependencies** | Zero runtime deps |
+|                  |                                                                                                          |
+| ---------------- | -------------------------------------------------------------------------------------------------------- |
+| **Language**     | ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)     |
+| **Testing**      | ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=white)                        |
+| **Bundler**      | ![tsup](https://img.shields.io/badge/tsup-ESM%20%2B%20CJS-yellow)                                        |
+| **CI**           | ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=githubactions&logoColor=white) |
+| **Dependencies** | Zero runtime deps                                                                                        |
 
 ## Contributing
 
