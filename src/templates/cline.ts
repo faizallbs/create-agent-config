@@ -4,6 +4,7 @@ import { commandsSection, conventionsSection } from "./shared.js";
 export function generateClinerules(
   projectName: string,
   stack: StackInfo,
+  communityContent = "",
 ): string {
   const sections: string[] = [];
 
@@ -21,6 +22,11 @@ export function generateClinerules(
 
   sections.push(`\n## Conventions\n`);
   sections.push(conventionsSection(stack));
+
+  if (communityContent) {
+    sections.push(`\n## Best Practices\n`);
+    sections.push(communityContent);
+  }
 
   sections.push(`\n## Rules\n`);
   sections.push(`- Run tests before completing tasks`);

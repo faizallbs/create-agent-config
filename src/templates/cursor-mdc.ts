@@ -4,6 +4,7 @@ import { commandsSection, conventionsSection } from "./shared.js";
 export function generateCursorMdc(
   projectName: string,
   stack: StackInfo,
+  communityContent = "",
 ): string {
   const lines: string[] = [];
 
@@ -27,6 +28,11 @@ export function generateCursorMdc(
 
   lines.push(`\n## Conventions\n`);
   lines.push(conventionsSection(stack));
+
+  if (communityContent) {
+    lines.push(`\n## Best Practices\n`);
+    lines.push(communityContent);
+  }
 
   lines.push(`\n## Rules\n`);
   lines.push(`- Do not modify generated files in \`dist/\` or \`build/\``);

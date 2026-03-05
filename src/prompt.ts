@@ -1,5 +1,7 @@
-import { createInterface } from "node:readline";
+import * as p from "@clack/prompts";
+import color from "picocolors";
 import type { StackInfo } from "./detect.js";
+import type { CommunityRule } from "./rules.js";
 
 export type OutputFormat =
   | "agents-md"
@@ -12,76 +14,163 @@ export type OutputFormat =
 export interface UserChoices {
   projectName: string;
   formats: OutputFormat[];
+  useRemoteRules: boolean;
 }
 
-const FORMAT_LABELS: Record<OutputFormat, string> = {
-  "agents-md":
-    "AGENTS.md          (open standard - Codex, Devin, Jules, 40+ tools)",
-  "claude-md": "CLAUDE.md          (Claude Code)",
-  "cursor-mdc": ".cursor/rules/     (Cursor IDE - modern .mdc format)",
-  "copilot-md": "copilot-instructions.md (GitHub Copilot)",
-  windsurfrules: ".windsurfrules     (Windsurf / Codeium)",
-  clinerules: ".clinerules        (Cline)",
-};
+interface FormatOption {
+  value: OutputFormat;
+  label: string;
+  hint: string;
+}
 
-const ALL_FORMATS: OutputFormat[] = [
-  "agents-md",
-  "claude-md",
-  "cursor-mdc",
-  "copilot-md",
-  "windsurfrules",
-  "clinerules",
+const FORMAT_OPTIONS: FormatOption[] = [
+  {
+    value: "agents-md",
+    label: "AGENTS.md",
+    hint: "open standard - Codex, Devin, Jules, 40+ tools",
+  },
+  {
+    value: "claude-md",
+    label: "CLAUDE.md",
+    hint: "Claude Code",
+  },
+  {
+    value: "cursor-mdc",
+    label: ".cursor/rules/project.mdc",
+    hint: "Cursor IDE",
+  },
+  {
+    value: "copilot-md",
+    label: ".github/copilot-instructions.md",
+    hint: "GitHub Copilot",
+  },
+  {
+    value: "windsurfrules",
+    label: ".windsurfrules",
+    hint: "Windsurf / Codeium",
+  },
+  {
+    value: "clinerules",
+    label: ".clinerules",
+    hint: "Cline",
+  },
 ];
 
-function ask(
-  rl: ReturnType<typeof createInterface>,
-  question: string,
-): Promise<string> {
-  return new Promise((resolve) => rl.question(question, resolve));
+function formatStack(stack: StackInfo): string {
+  const parts: string[] = [];
+  if (stack.languages.length > 0)
+    parts.push(color.cyan(stack.languages.join(", ")));
+  if (stack.frameworks.length > 0)
+    parts.push(color.yellow(stack.frameworks.join(", ")));
+  if (stack.testFrameworks.length > 0)
+    parts.push(color.green(stack.testFrameworks.join(", ")));
+  if (stack.buildTools.length > 0)
+    parts.push(color.magenta(stack.buildTools.join(", ")));
+  return parts.join(color.dim(" + "));
 }
 
-export async function promptUser(stack: StackInfo): Promise<UserChoices> {
-  const rl = createInterface({
-    input: process.stdin,
-    output: process.stdout,
+export async function promptUser(
+  stack: StackInfo,
+  remoteRules: CommunityRule[],
+): Promise<UserChoices> {
+  const detected = formatStack(stack);
+  if (detected) {
+    p.log.info(`Detected: ${detected}`);
+    p.log.info(`Package manager: ${color.cyan(stack.packageManager)}`);
+    if (stack.isMonorepo) p.log.info("Monorepo detected");
+  } else {
+    p.log.warn("Could not detect project stack. Using minimal defaults.");
+  }
+
+  const projectName = await p.text({
+    message: "Project name?",
+    placeholder: stack.name || "my-project",
+    defaultValue: stack.name || "my-project",
   });
 
-  try {
-    const defaultName = stack.name || "my-project";
-    const nameAnswer = await ask(rl, `\n  Project name (${defaultName}): `);
-    const projectName = nameAnswer.trim() || defaultName;
+  if (p.isCancel(projectName)) {
+    p.cancel("Cancelled.");
+    process.exit(0);
+  }
 
-    console.log("\n  Which config files should I generate?\n");
+  const formats = await p.multiselect({
+    message: "Which config files should I create?",
+    options: FORMAT_OPTIONS,
+    required: true,
+    initialValues: FORMAT_OPTIONS.map((o) => o.value),
+  });
 
-    ALL_FORMATS.forEach((fmt, i) => {
-      console.log(`    ${i + 1}. ${FORMAT_LABELS[fmt]}`);
+  if (p.isCancel(formats)) {
+    p.cancel("Cancelled.");
+    process.exit(0);
+  }
+
+  let useRemoteRules = false;
+  if (remoteRules.length > 0) {
+    const ruleNames = remoteRules
+      .map((r) => color.cyan(r.title))
+      .join(color.dim(", "));
+
+    const useRemote = await p.confirm({
+      message: `Found ${remoteRules.length} community rule${remoteRules.length === 1 ? "" : "s"} for your stack (${ruleNames}). Include them?`,
+      initialValue: true,
     });
 
-    console.log(`    a. All of the above`);
-
-    const formatAnswer = await ask(
-      rl,
-      `\n  Pick formats (comma-separated numbers, or 'a' for all) [a]: `,
-    );
-
-    let formats: OutputFormat[];
-    const trimmed = formatAnswer.trim().toLowerCase();
-
-    if (!trimmed || trimmed === "a" || trimmed === "all") {
-      formats = [...ALL_FORMATS];
-    } else {
-      const indices = trimmed
-        .split(/[,\s]+/)
-        .map((s) => parseInt(s, 10) - 1)
-        .filter((n) => n >= 0 && n < ALL_FORMATS.length);
-      formats =
-        indices.length > 0
-          ? [...new Set(indices.map((i) => ALL_FORMATS[i] as OutputFormat))]
-          : [...ALL_FORMATS];
+    if (p.isCancel(useRemote)) {
+      p.cancel("Cancelled.");
+      process.exit(0);
     }
 
-    return { projectName, formats };
-  } finally {
-    rl.close();
+    useRemoteRules = useRemote;
+  }
+
+  return {
+    projectName: projectName as string,
+    formats: formats as OutputFormat[],
+    useRemoteRules,
+  };
+}
+
+export function showPlan(
+  projectName: string,
+  formats: OutputFormat[],
+  useRemoteRules: boolean,
+  rootDir: string,
+): void {
+  const lines = formats.map((f) => {
+    const opt = FORMAT_OPTIONS.find((o) => o.value === f);
+    const file = getFilePath(f);
+    return `  ${color.green("+")} ${color.bold(file)} ${color.dim(`(${opt?.hint ?? f})`)}`;
+  });
+
+  p.log.message(
+    [
+      `${color.bold("Here's what I'll generate:")}`,
+      "",
+      ...lines,
+      "",
+      `${color.dim("Location:")} ${rootDir}`,
+      useRemoteRules
+        ? `${color.dim("Rules:")} community best practices from cursor.directory`
+        : `${color.dim("Rules:")} built-in defaults`,
+      `${color.dim("Existing files will be skipped.")}`,
+    ].join("\n"),
+  );
+}
+
+function getFilePath(format: OutputFormat): string {
+  switch (format) {
+    case "agents-md":
+      return "AGENTS.md";
+    case "claude-md":
+      return "CLAUDE.md";
+    case "cursor-mdc":
+      return ".cursor/rules/project.mdc";
+    case "copilot-md":
+      return ".github/copilot-instructions.md";
+    case "windsurfrules":
+      return ".windsurfrules";
+    case "clinerules":
+      return ".clinerules";
   }
 }

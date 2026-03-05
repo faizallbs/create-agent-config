@@ -9,6 +9,7 @@ import {
 export function generateAgentsMd(
   projectName: string,
   stack: StackInfo,
+  communityContent = "",
 ): string {
   const sections: string[] = [];
 
@@ -31,6 +32,11 @@ export function generateAgentsMd(
 
   sections.push(`\n## Conventions\n`);
   sections.push(conventionsSection(stack));
+
+  if (communityContent) {
+    sections.push(`\n## Best Practices\n`);
+    sections.push(communityContent);
+  }
 
   sections.push(`\n## Rules\n`);
   sections.push(`- Do not modify generated files in \`dist/\` or \`build/\``);

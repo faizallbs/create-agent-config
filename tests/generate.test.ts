@@ -9,6 +9,7 @@ import {
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import type { StackInfo } from "../src/detect.js";
+import type { CommunityRule } from "../src/rules.js";
 import { generateFiles } from "../src/generate.js";
 
 function createTempDir(): string {
@@ -38,6 +39,15 @@ const baseStack: StackInfo = {
   isMonorepo: false,
   directories: ["src", "tests", "public"],
 };
+
+const sampleRules: CommunityRule[] = [
+  {
+    title: "Next.js Best Practices",
+    content:
+      "Use server components by default. Minimize use client directives.",
+    source: "cursor.directory",
+  },
+];
 
 describe("generateFiles", () => {
   let tempDir: string;
@@ -123,6 +133,25 @@ describe("generateFiles", () => {
     const content = (files[0] as { content: string }).content;
     expect(content).toContain("Functional components");
     expect(content).toContain("hooks");
+  });
+
+  it("includes community rules when provided", () => {
+    const files = generateFiles(
+      "my-app",
+      baseStack,
+      ["agents-md"],
+      tempDir,
+      sampleRules,
+    );
+    const content = (files[0] as { content: string }).content;
+    expect(content).toContain("Best Practices");
+    expect(content).toContain("server components");
+  });
+
+  it("omits community section when no rules provided", () => {
+    const files = generateFiles("my-app", baseStack, ["agents-md"], tempDir);
+    const content = (files[0] as { content: string }).content;
+    expect(content).not.toContain("Best Practices");
   });
 
   it("handles Python project", () => {

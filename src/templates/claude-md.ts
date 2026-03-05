@@ -4,6 +4,7 @@ import { stackSummary, commandsSection, conventionsSection } from "./shared.js";
 export function generateClaudeMd(
   projectName: string,
   stack: StackInfo,
+  communityContent = "",
 ): string {
   const sections: string[] = [];
 
@@ -19,6 +20,11 @@ export function generateClaudeMd(
 
   sections.push(`\n## Conventions\n`);
   sections.push(conventionsSection(stack));
+
+  if (communityContent) {
+    sections.push(`\n## Best Practices\n`);
+    sections.push(communityContent);
+  }
 
   sections.push(`\n## Important\n`);
   sections.push(`- Always run tests after changes`);

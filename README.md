@@ -1,99 +1,89 @@
 <h1 align="center">create-agent-config</h1>
 
 <p align="center">
-  <strong>Your AI agent starts every session blind. Fix that in 10 seconds.</strong>
+  <strong>Your AI coding agent starts every session blind. Fix that in 30 seconds.</strong>
 </p>
 
 <p align="center">
-  One command. Detects your stack. Generates config files<br>
-  for Cursor, Claude Code, Copilot, Windsurf, Cline, and the AGENTS.md standard.
-</p>
-
-<p align="center">
-  <a href="#quick-start"><img src="https://img.shields.io/badge/Try_It_Now-22c55e?style=for-the-badge&logoColor=white" alt="Try It Now" /></a>
-  &nbsp;
-  <a href="#supported-formats"><img src="https://img.shields.io/badge/See_Formats-8b5cf6?style=for-the-badge&logoColor=white" alt="See Formats" /></a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/ofershap/create-agent-config/stargazers"><img src="https://img.shields.io/github/stars/ofershap/create-agent-config?style=social" alt="GitHub stars" /></a>
-  &nbsp;
   <a href="https://www.npmjs.com/package/create-agent-config"><img src="https://img.shields.io/npm/v/create-agent-config.svg" alt="npm version" /></a>
   <a href="https://www.npmjs.com/package/create-agent-config"><img src="https://img.shields.io/npm/dm/create-agent-config.svg" alt="npm downloads" /></a>
   <a href="https://github.com/ofershap/create-agent-config/actions/workflows/ci.yml"><img src="https://github.com/ofershap/create-agent-config/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-strict-blue" alt="TypeScript" /></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
-  <a href="https://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" /></a>
 </p>
 
 ---
-
-## The Setup Problem
-
-You open a project in Cursor. The agent doesn't know your stack, your conventions, your test commands. It guesses. It guesses wrong.
-
-So you write a CLAUDE.md. Then you need .cursor/rules for Cursor. Then copilot-instructions.md for Copilot. Then .windsurfrules because half your team uses Windsurf.
-
-That's 4 files saying roughly the same thing, and you wrote them all from scratch.
-
-## Quick Start
 
 ```bash
 npm create agent-config
 ```
 
-That's it. It scans your project, asks which formats you want, and writes the files.
+Scans your project, detects your stack, pulls community best practices from [cursor.directory](https://cursor.directory), and writes config files for every major AI coding tool. You pick which files to create, review what will be written, and confirm before anything touches disk.
 
-Works with `npx` too:
+## What exactly happens
+
+1. **Scans** your project directory (package.json, tsconfig, lockfiles, config files)
+2. **Detects** languages, frameworks, test runners, build tools, package manager
+3. **Fetches** matching community rules from [cursor.directory](https://cursor.directory)'s open source repository (optional, skippable with `--offline`)
+4. **Shows you** every file it plans to create and where
+5. **Asks for confirmation** before writing anything
+6. **Writes** the files you approved. Existing files are never overwritten.
+
+Nothing is executed, uploaded, or sent to any API. The only network call is a GET request to raw.githubusercontent.com to fetch community rules. Pass `--offline` to skip it entirely.
+
+## What gets created and where
+
+You choose which files to generate. Here's every possible output:
+
+| File                              | Location                   | Used by                                   |
+| --------------------------------- | -------------------------- | ----------------------------------------- |
+| `AGENTS.md`                       | project root               | Codex, Devin, Jules, SWE-agent, 40+ tools |
+| `CLAUDE.md`                       | project root               | Claude Code                               |
+| `.cursor/rules/project.mdc`       | `.cursor/rules/` directory | Cursor IDE (modern .mdc format)           |
+| `.github/copilot-instructions.md` | `.github/` directory       | GitHub Copilot                            |
+| `.windsurfrules`                  | project root               | Windsurf / Codeium                        |
+| `.clinerules`                     | project root               | Cline                                     |
+
+Each file contains your detected stack info (languages, frameworks, commands, conventions) plus community best practices if you opted in. The content is project-specific, not generic boilerplate.
+
+## Usage
 
 ```bash
+# interactive mode (recommended)
+npm create agent-config
+
+# also works with npx
 npx create-agent-config
-```
 
-Or target a specific directory:
-
-```bash
+# target a different directory
 npx create-agent-config ./my-project
+
+# skip network, use built-in templates only
+npx create-agent-config --offline
 ```
 
-## What It Does
+## What gets detected
 
-1. Scans your project directory (package.json, tsconfig, framework configs, lockfiles)
-2. Detects languages, frameworks, test runners, build tools, package manager
-3. Asks which config formats to generate
-4. Writes best-practice config files with your detected stack baked in
+| Category         | Examples                                                                                                                              |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Languages        | TypeScript, JavaScript, Python, Rust, Go                                                                                              |
+| Frameworks       | Next.js, React, Vue, Nuxt, Angular, Svelte, SvelteKit, Astro, Remix, NestJS, Express, Fastify, Hono, Electron, Django, Flask, FastAPI |
+| Test runners     | Vitest, Jest, Mocha, Playwright, Cypress, pytest                                                                                      |
+| Build tools      | tsup, esbuild, rollup, Vite, Webpack                                                                                                  |
+| Package managers | npm, pnpm, yarn, bun                                                                                                                  |
+| Monorepo         | Turborepo, Nx, Lerna, workspaces                                                                                                      |
 
-No API keys. No LLM calls. Works offline. Instant.
+Detection reads config files and package.json. Nothing is executed.
 
-## Supported Formats
+## Community rules
 
-| Format         | File                              | Tools                           |
-| -------------- | --------------------------------- | ------------------------------- |
-| AGENTS.md      | `AGENTS.md`                       | Codex, Devin, Jules, 40+ agents |
-| Claude Code    | `CLAUDE.md`                       | Claude Code                     |
-| Cursor         | `.cursor/rules/project.mdc`       | Cursor IDE (modern format)      |
-| GitHub Copilot | `.github/copilot-instructions.md` | GitHub Copilot                  |
-| Windsurf       | `.windsurfrules`                  | Windsurf / Codeium              |
-| Cline          | `.clinerules`                     | Cline                           |
+When online, the tool fetches framework-specific best practices from [cursor.directory](https://cursor.directory)'s [open source repository](https://github.com/pontusab/cursor.directory) on GitHub. These are community-curated rules maintained by 160+ contributors covering React, Next.js, TypeScript, Python, Vue, Angular, Svelte, NestJS, and many more.
 
-All formats get the same detected information - your stack, commands, conventions, project structure. Edit them after generation to add project-specific rules.
+You're asked whether to include them. If you decline or the fetch fails, the tool falls back to built-in defaults.
 
-## What Gets Detected
+## Example output
 
-| Category         | Examples                                                                                    |
-| ---------------- | ------------------------------------------------------------------------------------------- |
-| Languages        | TypeScript, JavaScript, Python, Rust, Go                                                    |
-| Frameworks       | Next.js, React, Vue, Nuxt, Angular, Svelte, NestJS, Express, Fastify, Hono, Django, FastAPI |
-| Test runners     | Vitest, Jest, Mocha, Playwright, Cypress, pytest                                            |
-| Build tools      | tsup, esbuild, rollup, Vite, Webpack                                                        |
-| Package managers | npm, pnpm, yarn, bun                                                                        |
-| Monorepo tools   | Turborepo, Nx, Lerna, workspaces                                                            |
-
-Detection is static analysis only. It reads config files and package.json - nothing gets executed, nothing gets uploaded.
-
-## Generated Output
-
-Here's what a generated `AGENTS.md` looks like for a Next.js + TypeScript project:
+Running against a Next.js + TypeScript project generates an `AGENTS.md` like this:
 
 ```markdown
 # my-app
@@ -120,6 +110,10 @@ Package manager: pnpm
 - Functional components only, no class components
 - Use hooks for state and side effects
 
+## Best Practices
+
+[community rules from cursor.directory for Next.js + React]
+
 ## Rules
 
 - Do not modify generated files in `dist/` or `build/`
@@ -127,25 +121,11 @@ Package manager: pnpm
 - Keep commits small and focused
 ```
 
-The Cursor `.mdc` format includes YAML frontmatter with `alwaysApply: true` so rules load automatically.
-
-## Existing Files Are Safe
-
-If a config file already exists, it gets skipped. You won't lose anything.
-
-## Tech Stack
-
-|                  |                                                                                                          |
-| ---------------- | -------------------------------------------------------------------------------------------------------- |
-| **Language**     | ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)     |
-| **Testing**      | ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=white)                        |
-| **Bundler**      | ![tsup](https://img.shields.io/badge/tsup-ESM%20%2B%20CJS-yellow)                                        |
-| **CI**           | ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=githubactions&logoColor=white) |
-| **Dependencies** | Zero runtime deps                                                                                        |
+The `.cursor/rules/project.mdc` version includes YAML frontmatter with `alwaysApply: true`.
 
 ## Contributing
 
-Contributions welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Author
 
@@ -153,10 +133,6 @@ Contributions welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://linkedin.com/in/ofershap)
 [![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=flat&logo=github&logoColor=white)](https://github.com/ofershap)
-
----
-
-If this helped you, [star the repo](https://github.com/ofershap/create-agent-config), [open an issue](https://github.com/ofershap/create-agent-config/issues) if something breaks, or [start a discussion](https://github.com/ofershap/create-agent-config/discussions).
 
 ## License
 

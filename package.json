@@ -1,7 +1,7 @@
 {
   "name": "create-agent-config",
-  "version": "1.0.0",
-  "description": "Scaffold AI agent config files for any project. One command, every tool.",
+  "version": "2.0.0",
+  "description": "Scaffold AI agent config files for any project. Detects your stack, pulls community rules from cursor.directory, writes configs for Cursor, Claude Code, Copilot, Windsurf, Cline, and AGENTS.md.",
   "type": "module",
   "bin": {
     "create-agent-config": "./dist/index.js"
@@ -82,7 +82,9 @@
     "claude-code",
     "ai-rules",
     "cline",
-    "vibe-coding"
+    "vibe-coding",
+    "cursor-directory",
+    "community-rules"
   ],
   "author": "Ofer Shapira <ofer@ofershap.dev>",
   "license": "MIT",
@@ -108,5 +110,9 @@
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.25.0",
     "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.1.0",
+    "picocolors": "^1.1.1"
   }
 }
