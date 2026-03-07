@@ -145,6 +145,10 @@ Contributions welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
   Demo animation made with <a href="https://github.com/ofershap/remotion-readme-kit">remotion-readme-kit</a>
 </p>
 
+---
+
+<sub>README built with [README Builder](https://ofershap.github.io/readme-builder/)</sub>
+
 ## License
 
 [MIT](LICENSE) &copy; [Ofer Shapira](https://github.com/ofershap)
